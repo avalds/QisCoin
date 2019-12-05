@@ -114,7 +114,7 @@ def play(visualization_mode = None):
 	print("highscores:")
 	show_highscores(games, difficulty)
 
-def is_highscore(number_of_rounds, gamemode, score, highscore_size = 3):
+def is_highscore(number_of_rounds, gamemode, score, highscore_size = 10):
 	folder = "HIGHSCORES/" + str(gamemode) + "/"
 	filename = folder + str(number_of_rounds)+ "highscores.csv"
 	if(not os.path.exists(folder)):
@@ -145,7 +145,7 @@ def is_highscore(number_of_rounds, gamemode, score, highscore_size = 3):
 	"""
 	return False
 
-def enter_higscore(number_of_rounds, gamemode, score, name, highscore_size = 3):
+def enter_higscore(number_of_rounds, gamemode, score, name, highscore_size = 10):
 	folder = "HIGHSCORES/" + str(gamemode) + "/"
 	filename = folder + str(number_of_rounds)+ "highscores.csv"
 	with open(filename, "r") as fp:
