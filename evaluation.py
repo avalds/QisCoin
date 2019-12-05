@@ -14,7 +14,7 @@ def evaluate_model(model, env, num_steps=1000):
             episode_rewards.append(0.0)
     
     mean_reward = round(np.mean(episode_rewards), 1)    
-    return mean_reward, len(episode_rewards)
+    return mean_reward, len(episode_rewards)-1
 
 def evaluate_random(env, num_steps=1000):
     episode_rewards = [0.0]
@@ -27,4 +27,17 @@ def evaluate_random(env, num_steps=1000):
             episode_rewards.append(0.0)
     
     mean_reward = round(np.mean(episode_rewards), 1)
-    return mean_reward, len(episode_rewards)
+    return mean_reward, len(episode_rewards)-1
+
+def evaluate_biased(env, num_steps=1000):
+    episode_rewards = [0.0]
+    obs = env.reset()
+    for i in range(num_steps):
+        obs, reward, done, _ = env.step(0)
+        episode_rewards[-1] += reward
+        if done:
+            obs = env.reset()
+            episode_rewards.append(0.0)
+    
+    mean_reward = round(np.mean(episode_rewards), 1)
+    return mean_reward, len(episode_rewards)-1
