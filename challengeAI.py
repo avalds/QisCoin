@@ -22,14 +22,11 @@ def generate_coin_circuit(difficulty):
 		print(no_components)
 		sys.exit()
 
-
-
-
-    list_components = []
+	list_components = []
 	for i in range(no_components):
-		index = random.choice(6)
-        components[index](0)
-        list_components.append(index)
+		index = random.choice(range(6))
+		components[index](0)
+		list_components.append(index)
 
 	circuit.measure(0,0)
 	return circuit, list_components
@@ -71,13 +68,13 @@ def setup_game():
 	while(playing):
 		AIagent = input("Do you want to play against PPO2(p), A2C(a) or ACER(c) agent? ")
 		if(AIagent.replace(" ", "").upper() == "p".upper() or AIagent.replace(" ", "").upper() == "ppo2".upper() or AIagent.replace(" ", "") == "1"):
-			AIagent = PPO2.load("models/PPO2-qiscoin-v1-100k");
+			AIagent = PPO2.load("models/PPO2-qiscoin-v1-10k");
 			playing = False;
 		elif(AIagent.replace(" ", "").upper() == "a".upper() or AIagent.replace(" ", "").upper() == "a2c".upper() or AIagent.replace(" ", "") == "2"):
-			AIagent = PPO2.load("models/A2C-qiscoin-v1-100k");
+			AIagent = A2C.load("models/A2C-qiscoin-v1-10k");
 			playing = False;
 		elif(AIagent.replace(" ", "").upper() == "c".upper() or AIagent.replace(" ", "").upper() == "acer".upper() or AIagent.replace(" ", "") == "3"):
-			AIagent = ACER.load("models/ACER-qiscoin-v1-100k");
+			AIagent = ACER.load("models/ACER-qiscoin-v1-10k");
 			playing = False;
 		else:
 			print("Unrecognized please try again!")
@@ -86,13 +83,14 @@ def setup_game():
 def play(visualization_mode = None):
 	score = 0
 	rounds = 0
-    difficulty = "MEDIUM"
+	difficulty = "MEDIUM"
 	games, AIagent = setup_game()
 
 	for i in range(games):
 		print("The circuit is!")
 		circuit, list_components = generate_coin_circuit(difficulty)
-        AIguess = AI_guess(AIagent,list_components)
+		AIguess = AI_guess(AIagent,list_components)
+		print("AI guesses: {0}".format(AIguess[0]))        
 		#%matplotlib inline
 		#circuit.draw(output="mpl")
 		playing = True
