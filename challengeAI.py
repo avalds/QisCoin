@@ -69,28 +69,31 @@ def setup_game():
 		AIagent = input("Do you want to play against PPO2(p), A2C(a) or ACER(c) agent? ")
 		if(AIagent.replace(" ", "").upper() == "p".upper() or AIagent.replace(" ", "").upper() == "ppo2".upper() or AIagent.replace(" ", "") == "1"):
 			AIagent = PPO2.load("models/PPO2-qiscoin-v1-10k");
+			ai_name = "PPO2"
 			playing = False;
 		elif(AIagent.replace(" ", "").upper() == "a".upper() or AIagent.replace(" ", "").upper() == "a2c".upper() or AIagent.replace(" ", "") == "2"):
 			AIagent = A2C.load("models/A2C-qiscoin-v1-10k");
+			ai_name = "A2C"
 			playing = False;
 		elif(AIagent.replace(" ", "").upper() == "c".upper() or AIagent.replace(" ", "").upper() == "acer".upper() or AIagent.replace(" ", "") == "3"):
 			AIagent = ACER.load("models/ACER-qiscoin-v1-10k");
+			ai_name = "ACER"
 			playing = False;
 		else:
 			print("Unrecognized please try again!")
-	return games, AIagent
+	return games, AIagent, ai_name
 
 def play(visualization_mode = None):
 	score = 0
+	ai_score = 0
 	rounds = 0
 	difficulty = "MEDIUM"
-	games, AIagent = setup_game()
+	games, AIagent, ai_name = setup_game()
 
 	for i in range(games):
 		print("The circuit is!")
 		circuit, list_components = generate_coin_circuit(difficulty)
 		AIguess = AI_guess(AIagent,list_components)
-		print("AI guesses: {0}".format(AIguess[0]))        
 		#%matplotlib inline
 		#circuit.draw(output="mpl")
 		playing = True
@@ -100,10 +103,14 @@ def play(visualization_mode = None):
 			print("heads(h)(1) or tails(t)(0)")
 			choice = input()
 			if(choice == "h" or choice == "heads" or choice == "" or choice == "1"):
+				print("AI guesses: {0}".format(AIguess[0]))
+				ai_score += AIguess[0] == 1
 				playing = False
 				score += evaluate_coin(circuit, True)
 				rounds += 1
 			elif(choice == "t" or choice == "tails" or choice == "0"):
+				print("AI guesses: {0}".format(AIguess[0]))
+				ai_score += AIguess[0] == 0
 				playing = False
 				score += evaluate_coin(circuit, False)
 				rounds += 1
@@ -112,15 +119,22 @@ def play(visualization_mode = None):
 				print("quit!")
 				return;
 			else:
-			    print("please enter valic input")
-			if(rounds != 0):
-				print("You have won {} of the {} rounds you have played ({}% winrate)".format(score, rounds, 100*score/rounds))
+				print("please enter valic input")
+		if(rounds != 0):
+			print("You have won {} of the {} rounds you have played ({}% winrate)".format(score, rounds, 100*score/rounds))
+			print("The AI has won {} of the {} rounds you have played ({}% winrate)".format(ai_score, rounds, 100*ai_score/rounds))
 
+	some_highscore = False;
 	if(is_highscore(games, difficulty, score/rounds)):
 		name = input("It was a highscore enter your name: ")
 		enter_higscore(games, difficulty, score/rounds, name)
-	else:
-		print("Its not a highscore!")
+		some_highscore = True
+	if(is_highscore(games, difficulty, ai_score/rounds)):
+		print("The Ai got a highscore!")
+		enter_higscore(games, difficulty, ai_score/rounds, ai_name)
+		some_highscore = True
+	if(not some_highscore):
+		print("Neither you or the AI got a high")
 	print("highscores:")
 	show_highscores(games, difficulty)
 
