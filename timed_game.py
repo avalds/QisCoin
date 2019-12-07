@@ -1,5 +1,7 @@
 import random, os, sys, time
 import qiskit as qk
+from IPython.display import clear_output
+
 def generate_coin_circuit(difficulty):
 	circuit = qk.QuantumCircuit(1,1)
 	if(difficulty == "EASY"):
@@ -110,8 +112,9 @@ def play(visualization_mode = None):
 				return;
 			else:
 			    print("please enter valic input")
-			if(rounds != 0):
-				print("You have won {} of the {} rounds you have played ({}% winrate)".format(score, rounds, 100*score/rounds))
+		if(rounds != 0):
+			clear_output()
+			print("You have won {} of the {} rounds you have played ({}% winrate)".format(score, rounds, 100*score/rounds))
 
 	time_score = round(time.time()-start, 2)
 	print("Your time is:", time_score)

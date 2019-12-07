@@ -1,6 +1,7 @@
 import random, os, sys, time
 import qiskit as qk
 import gym
+from IPython.display import clear_output
 
 from stable_baselines import PPO2, A2C, ACER
 
@@ -84,15 +85,17 @@ def play(visualization_mode = None):
 	score = 0
 	ai_score = 0
 	rounds = 0
+	clear_output()
 	games, agent, ai_name = setup_game()
 	difficulty = "MEDIUM"
 	print("You will probably not beat the AI in time, but try to beat it in accuracy :)")
 	cum_time = 0 #cumulative time for player
 	ai_time = 0 #cumulative time for ai
 
-
+	clear_output()
 	for i in range(games):
 		input("Press enter when you are ready:>>>")
+		clear_output()
 		print("The circuit is!")
 		circuit, list_components = generate_coin_circuit(difficulty)
 		#%matplotlib inline
@@ -104,7 +107,7 @@ def play(visualization_mode = None):
 			start = time.time()
 			print("heads(h)(1) or tails(t)(0)")
 			choice = input()
-			print("\n\n\n\n\n\n\n\n")
+
 			if(choice == "h" or choice == "heads" or choice == "" or choice == "1"):
 				choice = 1
 				cum_time += time.time() - start
