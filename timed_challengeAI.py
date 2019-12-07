@@ -186,7 +186,7 @@ def play(visualization_mode = None):
 	input("Well played :)")
 
 def is_highscore(number_of_rounds, gamemode, score, highscore_size = 10, time_score = 0):
-	folder = "T_HIGHSCORES/" + str(gamemode) + "AI/"
+	folder = "T_HIGHSCORES/" + str(gamemode) + "_AI/"
 	filename = folder + str(number_of_rounds)+ "highscores.csv"
 	if(not os.path.exists(folder)):
 		os.makedirs(folder)
@@ -219,7 +219,7 @@ def is_highscore(number_of_rounds, gamemode, score, highscore_size = 10, time_sc
 	return False
 
 def enter_higscore(number_of_rounds, gamemode, score, name, highscore_size = 10, time_score = 0, winner = False):
-	folder = "T_HIGHSCORES/" + str(gamemode) + "AI/"
+	folder = "T_HIGHSCORES/" + str(gamemode) + "_AI/"
 	filename = folder + str(number_of_rounds)+ "highscores.csv"
 	with open(filename, "r") as fp:
 		lines = fp.readlines()
@@ -270,7 +270,7 @@ def enter_higscore(number_of_rounds, gamemode, score, name, highscore_size = 10,
 			fp.write("\n")
 
 def show_highscores(number_of_rounds, gamemode):
-	folder = "T_HIGHSCORES/" + str(gamemode) + "AI/"
+	folder = "T_HIGHSCORES/" + str(gamemode) + "_AI/"
 	filename = folder + str(number_of_rounds)+ "highscores.csv"
 	with open(filename, "r") as fp:
 		lines = fp.readlines()
