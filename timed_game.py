@@ -7,7 +7,7 @@ def generate_coin_circuit(difficulty):
 		components = [circuit.x, circuit.reset, circuit.iden]
 	elif(difficulty == "MEDIUM"):
 		no_components = 6;
-		components = [circuit.h, circuit.x, circuit.reset, circuit.t, circuit.tdg,circuit.iden]
+		components = [circuit.h, circuit.x, circuit.reset, circuit.t, circuit.tdg, circuit.iden]
 	elif(difficulty == "HARD"):
 		no_components = 10;
 		components = [circuit.h, circuit.x, circuit.reset, circuit.t, circuit.tdg,circuit.iden, circuit.h, circuit.y, circuit.z, circuit.s, circuit.sdg]
@@ -117,6 +117,7 @@ def play(visualization_mode = None):
 	print("Your time is:", time_score)
 	if(is_highscore(games, difficulty, score/rounds, time_score = time_score)):
 		name = input("It was a highscore enter your name: ")
+		name = name[:30] #To ensure that the name is not overly long
 		enter_higscore(games, difficulty, score/rounds, name, time_score = time_score)
 	else:
 		print("Its not a highscore!")
@@ -139,6 +140,7 @@ def is_highscore(number_of_rounds, gamemode, score, highscore_size = 10, time_sc
 		lines = fp.readlines()
 
 	for line in lines:
+		line = line.replace("\n", "")
 		if(len(line.split(";")) >= 3):
 			scores.append(float(line.split(";")[1]))
 			times.append(float(line.split(";")[2]))
@@ -167,6 +169,7 @@ def enter_higscore(number_of_rounds, gamemode, score, name, highscore_size = 10,
 	times = []
 	entered = False
 	for line in lines:
+		line = line.replace("\n", "")
 		if(len(line.split(";")) >= 3):
 			hname, hscore, htime_score = line.split(";")
 			if(not entered):
@@ -205,11 +208,11 @@ def show_highscores(number_of_rounds, gamemode):
 	filename = folder + str(number_of_rounds)+ "highscores.csv"
 	with open(filename, "r") as fp:
 		lines = fp.readlines()
-	print("{:^3}|{:^20}|{:^20}|{:^20}".format("No.","Name", "Score (%)", "Time (sec)"))
+	print("{:^3}|{:^30}|{:^20}|{:^20}".format("No.","Name", "Score (%)", "Time (sec)"))
 	placement = 1
 	for line in lines:
 		if(len(line.split(";")) >= 3):
-			hname, hscore, htime_score = line.split(";")
-			print("{0:-^3}|{0:-^20}|{0:-^20}|{0:-^20}".format("-"))
-			print("{0:^3}|{1:^20}|{2:^20}|{3:^20}".format(placement, hname, float(hscore)*100, htime_score))
+			hname, hscore, htime_score = line.replace("\n", "").split(";")
+			print("{0:-^3}|{0:-^30}|{0:-^20}|{0:-^20}".format("-"))
+			print("{0:^3}|{1:^30}|{2:^20}|{3:^20}".format(placement, hname, float(hscore)*100, htime_score))
 			placement += 1

@@ -104,30 +104,40 @@ def play(visualization_mode = None):
 			start = time.time()
 			print("heads(h)(1) or tails(t)(0)")
 			choice = input()
-			print("\n\n")
+			print("\n\n\n\n\n\n\n\n")
 			if(choice == "h" or choice == "heads" or choice == "" or choice == "1"):
+				choice = 1
 				cum_time += time.time() - start
 				start = time.time()
 				AIguess = AI_guess(agent, list_components)
 				ai_time += time.time() - start
+				print("AI guess: {0}, {1}".format("Heads(1)" if AIguess[0] else "Tails(0)", "the same as you :)" if AIguess[0] == choice else "in contrast to you!"))
+
 				coin_value = measure_coin(circuit)
+				print("The coin was {}".format("Heads(1)" if coin_value else "Tails(0)"))
+
 				ai_score += AIguess[0] == coin_value
 				score += coin_value
 
-				print("AI guess: {0}".format(AIguess[0]))
 				playing = False
-
 				rounds += 1
 			elif(choice == "t" or choice == "tails" or choice == "0"):
+				choice = 0
 				cum_time += time.time() - start
 				start = time.time()
 				AIguess = AI_guess(agent, list_components)
 				ai_time += time.time() - start
-				print("AI guess: {0}".format(AIguess[0]))
-				playing = False
+				print("AI guess: {0}, {1}".format("Heads(1)" if AIguess[0] else "Tails(0)", "the same as you :)" if AIguess[0] == choice else "in contrast to you!"))
+
 				coin_value = measure_coin(circuit)
+				print("The coin was {}".format("Heads(1)" if coin_value else "Tails(0)"))
+
+
 				ai_score += AIguess[0] == coin_value
 				score += (coin_value == 0)
+
+
+				playing = False
 				rounds += 1
 			elif(choice.upper() == "Q" or choice.upper() == "quit".upper()):
 				playing = False
@@ -143,24 +153,32 @@ def play(visualization_mode = None):
 	#print("Your time is:", time_score)
 	cum_time = round(cum_time,2)
 	ai_time = round_to_n(ai_time, 3)
+	winner = False
 	if(ai_score < score or (ai_score == score and ai_time > cum_time)):
 		print("YOU BEAT THE AI!!!!!!")
-	elif(ai_score == score and ai_time == cum_time):
-		print("WOW, this should be impossible, you preformed exactly as well as the AI")
+		winner = True
+	elif(ai_score == score):
+		if(ai_time == cum_time):
+			print("WOW, this should be impossible, you preformed exactly as well as the AI")
+		else:
+			print("You tied the in points AI, but it was faster than you.\nBetter luck next time :)")
+
 	else:
 		print("You lost to the AI :( \ntry again soon!!! :)")
 	time.sleep(.5)
 	player_highscore = False
 	ai_highscore = False
+
 	if(is_highscore(games, difficulty, score/rounds, time_score = cum_time)):
 		name = input("It was a highscore enter your name: ")
+		name = name[:30]
 		player_highscore = True
-		enter_higscore(games, difficulty, score/rounds, name, time_score = cum_time)
+		enter_higscore(games, difficulty, score/rounds, name, time_score = cum_time, winner = winner)
 	else:
 		print("You did not get a highscore!")
 	if(is_highscore(games, difficulty, ai_score/rounds, time_score = ai_time)):
 		ai_highscore = True
-		enter_higscore(games, difficulty, ai_score/rounds, ai_name + "(AI)", time_score = ai_time)
+		enter_higscore(games, difficulty, ai_score/rounds, ai_name + "(AI)", time_score = ai_time, winner = not winner)
 
 
 	print("highscores:")
@@ -168,13 +186,13 @@ def play(visualization_mode = None):
 	input("Well played :)")
 
 def is_highscore(number_of_rounds, gamemode, score, highscore_size = 10, time_score = 0):
-	folder = "T_HIGHSCORES_/" + str(gamemode) + "AI/"
+	folder = "T_HIGHSCORES/" + str(gamemode) + "AI/"
 	filename = folder + str(number_of_rounds)+ "highscores.csv"
 	if(not os.path.exists(folder)):
 		os.makedirs(folder)
 	if(not os.path.exists(filename)):
 		with open(filename, "w") as fp:
-			fp.write("Baldric;0;0");
+			fp.write("Baldric;0;0;No");
 		return True;
 
 	scores = []
@@ -200,8 +218,8 @@ def is_highscore(number_of_rounds, gamemode, score, highscore_size = 10, time_sc
 
 	return False
 
-def enter_higscore(number_of_rounds, gamemode, score, name, highscore_size = 10, time_score = 0):
-	folder = "T_HIGHSCORES_/" + str(gamemode) + "AI/"
+def enter_higscore(number_of_rounds, gamemode, score, name, highscore_size = 10, time_score = 0, winner = False):
+	folder = "T_HIGHSCORES/" + str(gamemode) + "AI/"
 	filename = folder + str(number_of_rounds)+ "highscores.csv"
 	with open(filename, "r") as fp:
 		lines = fp.readlines()
@@ -209,25 +227,30 @@ def enter_higscore(number_of_rounds, gamemode, score, name, highscore_size = 10,
 	scores = []
 	names = []
 	times = []
+	winners = []
 	entered = False
 	for line in lines:
-		if(len(line.split(";")) >= 3):
-			hname, hscore, htime_score = line.split(";")
+		if(len(line.split(";")) >= 4):
+			line = line.replace("\n", "")
+			hname, hscore, htime_score, hwinner = line.split(";")
 			if(not entered):
 				if(float(hscore) < score or (float(hscore) == score and float(htime_score) > time_score)):
-					scores.append(str(score).replace("\n", ""))
-					names.append(str(name).replace("\n", ""))
-					times.append(str(time_score).replace("\n", ""))
+					scores.append(str(score))
+					names.append(str(name))
+					times.append(str(time_score))
+					winners.append("Yes" if winner else "No")
 					entered = True
 
-			scores.append(str(hscore).replace("\n", ""))
-			names.append(str(hname).replace("\n", ""))
-			times.append(str(htime_score).replace("\n", ""))
+			scores.append(str(hscore))
+			names.append(str(hname))
+			times.append(str(htime_score))
+			winners.append(str(hwinner))
 
 	if(not entered):
-		scores.append(str(score).replace("\n", ""))
-		names.append(str(name).replace("\n", ""))
-		times.append(str(time_score).replace("\n", ""))
+		scores.append(str(score))
+		names.append(str(name))
+		times.append(str(time_score))
+		winners.append("Yes" if winner else "No")
 		entered = True
 
 	#scores = scores[:highscore_size]
@@ -242,20 +265,22 @@ def enter_higscore(number_of_rounds, gamemode, score, name, highscore_size = 10,
 			fp.write(scores[i])
 			fp.write(";")
 			fp.write(times[i])
+			fp.write(";")
+			fp.write(winners[i])
 			fp.write("\n")
 
 def show_highscores(number_of_rounds, gamemode):
-	folder = "T_HIGHSCORES_/" + str(gamemode) + "AI/"
+	folder = "T_HIGHSCORES/" + str(gamemode) + "AI/"
 	filename = folder + str(number_of_rounds)+ "highscores.csv"
 	with open(filename, "r") as fp:
 		lines = fp.readlines()
-	print("{:^3}|{:^20}|{:^20}|{:^20}".format("No.","Name", "Score (%)", "Time (sec)"))
+	print("{:^3}|{:^30}|{:^20}|{:^20}{:^4}".format("No.","Name", "Score (%)", "Time (sec)", "Won?"))
 	placement = 1
 	for line in lines:
 		if(len(line.split(";")) >= 3):
-			hname, hscore, htime_score = line.replace("\n", "").split(";")
-			print("{0:-^3}|{0:-^20}|{0:-^20}|{0:-^20}".format("-"))
-			print("{0:^3}|{1:^20}|{2:^20}|{3:^20}".format(placement, hname, float(hscore)*100, htime_score))
+			hname, hscore, htime_score, hwinner = line.replace("\n", "").split(";")
+			print("{0:-^3}|{0:-^30}|{0:-^20}|{0:-^20}{0:-^4}".format("-"))
+			print("{0:^3}|{1:^30}|{2:^20}|{3:^20}{4:^4}".format(placement, hname, float(hscore)*100, htime_score, hwinner))
 			placement += 1
 def round_to_n(x, n = 3):
 	from math import floor, log10
