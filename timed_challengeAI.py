@@ -147,7 +147,7 @@ def play(visualization_mode = None):
 	elif(ai_score == score and ai_time == cum_time):
 		print("WOW, this should be impossible, you preformed exactly as well as the AI")
 	else:
-		print("You lost to the AI :( \ntry again!!!")
+		print("You lost to the AI :( \ntry again soon!!! :)")
 	time.sleep(.5)
 	player_highscore = False
 	ai_highscore = False
@@ -159,11 +159,12 @@ def play(visualization_mode = None):
 		print("You did not get a highscore!")
 	if(is_highscore(games, difficulty, ai_score/rounds, time_score = ai_time)):
 		ai_highscore = True
-		enter_higscore(games, difficulty, ai_score/rounds, ai_name, time_score = ai_time)
+		enter_higscore(games, difficulty, ai_score/rounds, ai_name + "(AI)", time_score = ai_time)
 
 
 	print("highscores:")
 	show_highscores(games, difficulty)
+	input("Well played :)")
 
 def is_highscore(number_of_rounds, gamemode, score, highscore_size = 10, time_score = 0):
 	folder = "T_HIGHSCORES/" + str(gamemode) + "/"
@@ -213,19 +214,19 @@ def enter_higscore(number_of_rounds, gamemode, score, name, highscore_size = 10,
 			hname, hscore, htime_score = line.split(";")
 			if(not entered):
 				if(float(hscore) < score or (float(hscore) == score and float(htime_score) > time_score)):
-					scores.append(str(score))
-					names.append(str(name))
-					times.append(str(time_score))
+					scores.append(str(score).replace("\n", ""))
+					names.append(str(name).replace("\n", ""))
+					times.append(str(time_score).replace("\n", ""))
 					entered = True
 
-			scores.append(str(hscore))
-			names.append(str(hname))
-			times.append(str(htime_score))
+			scores.append(str(hscore).replace("\n", ""))
+			names.append(str(hname).replace("\n", ""))
+			times.append(str(htime_score).replace("\n", ""))
 
 	if(not entered):
-		scores.append(str(score))
-		names.append(str(name))
-		times.append(str(time_score))
+		scores.append(str(score).replace("\n", ""))
+		names.append(str(name).replace("\n", ""))
+		times.append(str(time_score).replace("\n", ""))
 		entered = True
 
 	#scores = scores[:highscore_size]
@@ -251,7 +252,7 @@ def show_highscores(number_of_rounds, gamemode):
 	placement = 1
 	for line in lines:
 		if(len(line.split(";")) >= 3):
-			hname, hscore, htime_score = line.split(";")
+			hname, hscore, htime_score = line.replace("\n", "").split(";")
 			print("{0:-^3}|{0:-^20}|{0:-^20}|{0:-^20}".format("-"))
 			print("{0:^3}|{1:^20}|{2:^20}|{3:^20}".format(placement, hname, float(hscore)*100, htime_score))
 			placement += 1
