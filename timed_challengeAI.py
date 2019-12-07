@@ -104,6 +104,7 @@ def play(visualization_mode = None):
 			start = time.time()
 			print("heads(h)(1) or tails(t)(0)")
 			choice = input()
+			print("\n\n")
 			if(choice == "h" or choice == "heads" or choice == "" or choice == "1"):
 				cum_time += time.time() - start
 				start = time.time()
@@ -113,7 +114,7 @@ def play(visualization_mode = None):
 				ai_score += AIguess[0] == coin_value
 				score += coin_value
 
-				print("AI guesses: {0}".format(AIguess[0]))
+				print("AI guess: {0}".format(AIguess[0]))
 				playing = False
 
 				rounds += 1
@@ -122,7 +123,7 @@ def play(visualization_mode = None):
 				start = time.time()
 				AIguess = AI_guess(agent, list_components)
 				ai_time += time.time() - start
-				print("AI guesses: {0}".format(AIguess[0]))
+				print("AI guess: {0}".format(AIguess[0]))
 				playing = False
 				coin_value = measure_coin(circuit)
 				ai_score += AIguess[0] == coin_value
@@ -167,7 +168,7 @@ def play(visualization_mode = None):
 	input("Well played :)")
 
 def is_highscore(number_of_rounds, gamemode, score, highscore_size = 10, time_score = 0):
-	folder = "T_HIGHSCORES/" + str(gamemode) + "/"
+	folder = "T_HIGHSCORES_/" + str(gamemode) + "AI/"
 	filename = folder + str(number_of_rounds)+ "highscores.csv"
 	if(not os.path.exists(folder)):
 		os.makedirs(folder)
@@ -200,7 +201,7 @@ def is_highscore(number_of_rounds, gamemode, score, highscore_size = 10, time_sc
 	return False
 
 def enter_higscore(number_of_rounds, gamemode, score, name, highscore_size = 10, time_score = 0):
-	folder = "T_HIGHSCORES/" + str(gamemode) + "/"
+	folder = "T_HIGHSCORES_/" + str(gamemode) + "AI/"
 	filename = folder + str(number_of_rounds)+ "highscores.csv"
 	with open(filename, "r") as fp:
 		lines = fp.readlines()
@@ -244,7 +245,7 @@ def enter_higscore(number_of_rounds, gamemode, score, name, highscore_size = 10,
 			fp.write("\n")
 
 def show_highscores(number_of_rounds, gamemode):
-	folder = "T_HIGHSCORES/" + str(gamemode) + "/"
+	folder = "T_HIGHSCORES_/" + str(gamemode) + "AI/"
 	filename = folder + str(number_of_rounds)+ "highscores.csv"
 	with open(filename, "r") as fp:
 		lines = fp.readlines()

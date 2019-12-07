@@ -74,6 +74,7 @@ def play(visualization_mode = None):
 	score = 0
 	rounds = 0
 	games, difficulty = setup_game()
+	input("Are you ready?>>>")
 	print("The timer starts in:\n3")
 	time.sleep(1)
 	print("2")
