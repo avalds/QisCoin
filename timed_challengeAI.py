@@ -157,6 +157,7 @@ def play(visualization_mode = None):
 	cum_time = round(cum_time,2)
 	ai_time = round_to_n(ai_time, 3)
 	winner = False
+	clear_output()
 	if(ai_score < score or (ai_score == score and ai_time > cum_time)):
 		print("YOU BEAT THE AI!!!!!!")
 		winner = True
@@ -186,7 +187,7 @@ def play(visualization_mode = None):
 
 	print("highscores:")
 	show_highscores(games, difficulty)
-	input("Well played :)")
+	#input("Well played :)")
 
 def is_highscore(number_of_rounds, gamemode, score, highscore_size = 10, time_score = 0):
 	folder = "T_HIGHSCORES/" + str(gamemode) + "_AI/"

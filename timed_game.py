@@ -119,6 +119,7 @@ def play(visualization_mode = None):
 	time_score = round(time.time()-start, 2)
 	print("Your time is:", time_score)
 	if(is_highscore(games, difficulty, score/rounds, time_score = time_score)):
+		clear_output()
 		name = input("It was a highscore enter your name: ")
 		name = name[:30] #To ensure that the name is not overly long
 		enter_higscore(games, difficulty, score/rounds, name, time_score = time_score)
