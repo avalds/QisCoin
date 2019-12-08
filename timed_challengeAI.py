@@ -175,7 +175,7 @@ def play(visualization_mode = None):
 
 	if(is_highscore(games, difficulty, score/rounds, time_score = cum_time)):
 		name = input("It was a highscore enter your name: ")
-		name = name[:30]
+		name = name[:30].replace(";", "") #To avoid brearking the csv format
 		player_highscore = True
 		enter_higscore(games, difficulty, score/rounds, name, time_score = cum_time, winner = winner)
 	else:

@@ -121,7 +121,7 @@ def play(visualization_mode = None):
 	if(is_highscore(games, difficulty, score/rounds, time_score = time_score)):
 		#clear_output()
 		name = input("It was a highscore enter your name: ")
-		name = name[:30] #To ensure that the name is not overly long
+		name = name[:30].replace(";", "") #To ensure that the name is not overly long
 		enter_higscore(games, difficulty, score/rounds, name, time_score = time_score)
 	else:
 		print("Its not a highscore!")
